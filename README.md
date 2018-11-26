@@ -14,7 +14,7 @@ Pipeline reads the JSON event data and a composite will take the json data and s
 		  ]
 }
 ```
-## Batch Pipeline implementation in Java
+## Batch Pipeline implementation
 ```java
 ContentCategoryOptions options = PipelineOptionsFactory.fromArgs(args).withValidation()
 				.as(ContentCategoryOptions.class);
@@ -37,7 +37,7 @@ ContentCategoryOptions options = PipelineOptionsFactory.fromArgs(args).withValid
 
 		p.run().waitUntilFinish();
 ```
-## Streaming Pipeline implementation in Java
+## Streaming Pipeline implementation
 ```java
 ContentCategoryPubSubOptions options = PipelineOptionsFactory.fromArgs(args).withValidation()
 				.as(ContentCategoryPubSubOptions.class);
