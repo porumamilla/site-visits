@@ -17,14 +17,10 @@ Pipeline reads the JSON event data and a composite will take the json data and s
 ```
 ## Batch Pipeline implementation
 ```java
-ContentCategoryOptions options = PipelineOptionsFactory
-										 .fromArgs(args)
-										 .withValidation()
-										 .as(ContentCategoryOptions.class);
+ContentCategoryOptions options = PipelineOptionsFactory.fromArgs(args).withValidation().as(ContentCategoryOptions.class);
 Pipeline pipeline = Pipeline.create(options);
 
-PCollection<String> jsonLines = pipeline
-								.apply(TextIO.read().from(options.getInputFile()));
+PCollection<String> jsonLines = pipeline.apply(TextIO.read().from(options.getInputFile()));
 		
 PCollection<KV<Long, Long>> sumByCategoryTypeTuples = jsonLines.apply(new SumByCategoryTypeComposite());
 sumByCategoryTypeTuples.apply(BigQueryIO.<KV<Long, Long>>write()
