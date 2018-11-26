@@ -27,7 +27,8 @@ PCollection<String> jsonLines = pipeline
 								.apply(TextIO.read().from(options.getInputFile()));
 		
 PCollection<KV<Long, Long>> sumByCategoryTypeTuples = jsonLines.apply(new SumByCategoryTypeComposite());
-sumByCategoryTypeTuples.apply(BigQueryIO.<KV<Long, Long>>write().to(SchemaUtil.TBL_NAME_SUM_BY_CONTENT_CAT_TYPE)
+sumByCategoryTypeTuples.apply(BigQueryIO.<KV<Long, Long>>write()
+					   .to(SchemaUtil.TBL_NAME_SUM_BY_CONTENT_CAT_TYPE)
 					   .withSchema(SchemaUtil.SUM_BY_CONTENT_CAT_TYPE_SCHEMA)
 				       .withFormatFunction(tuple -> TableRowUtil.getTableRowForSumByContentCatType(tuple))
 				       .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
