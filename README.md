@@ -14,7 +14,7 @@ Pipeline reads the JSON event data and a composite will take the json data and s
 		  ]
 }
 ```
-## Pipeline implementation in Java
+## Batch Pipeline implementation in Java
 ```java
 ContentCategoryOptions options = PipelineOptionsFactory.fromArgs(args).withValidation()
 				.as(ContentCategoryOptions.class);
@@ -34,6 +34,33 @@ ContentCategoryOptions options = PipelineOptionsFactory.fromArgs(args).withValid
 								.set("CAT_TYPE", quote.getKey()).set("NUM_MINUTES_SPENT", quote.getValue())
 								.set("DATE", getDate(new Date())).set("UPDATED_TIME_STAMP", getTimestamp()))
 						.withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_TRUNCATE));
+
+		p.run().waitUntilFinish();
+```
+## Streaming Pipeline implementation in Java
+```java
+ContentCategoryPubSubOptions options = PipelineOptionsFactory.fromArgs(args).withValidation()
+				.as(ContentCategoryPubSubOptions.class);
+		options.as(DataflowPipelineOptions.class).setStreaming(true);
+		
+		Pipeline p = Pipeline.create(options);
+	
+		FixedWindows window = FixedWindows.of(Duration.standardMinutes(new Integer(2)));
+		PCollection<String> jsonLines = p.apply(PubsubIO.readStrings().fromTopic(options.getPubsubTopic())).apply(Window.<String> into(window));
+		
+		PCollection<KV<Long, Long>> sumByCategoryType = jsonLines.apply(new SumByCategoryTypeComposite());
+		sumByCategoryType
+				.apply(BigQueryIO.<KV<Long, Long>>write().to("sitevisits-195700:sitevisits.SUM_BY_CONTENT_CAT_TYPE")
+						.withSchema(new TableSchema().setFields(
+								ImmutableList.of(new TableFieldSchema().setName("USER_NAME").setType("STRING"),
+										new TableFieldSchema().setName("CAT_TYPE").setType("INTEGER"),
+										new TableFieldSchema().setName("NUM_MINUTES_SPENT").setType("NUMERIC"),
+										new TableFieldSchema().setName("DATE").setType("DATE"),
+										new TableFieldSchema().setName("UPDATED_TIME_STAMP").setType("TIMESTAMP"))))
+						.withFormatFunction(quote -> new TableRow().set("USER_NAME", "porumamilla_raghu")
+								.set("CAT_TYPE", quote.getKey()).set("NUM_MINUTES_SPENT", quote.getValue())
+								.set("DATE", getDate(new Date())).set("UPDATED_TIME_STAMP", getTimestamp()))
+						.withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
 
 		p.run().waitUntilFinish();
 ```
