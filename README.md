@@ -3,7 +3,7 @@ This is a Google data flow project and is created to implement the pipeline for 
 
 Event comes in the form of JSON string. 
 
-Pipeline reads the JSON event data and a composite will take the json data and sums up the timeSpent value by category type. 
+Pipeline reads the JSON event data and a composite is designed to take the json data and to sum up the timeSpent value by category type. 
 
 Then finally saves the aggregated sum in the BigQuery table SUM_BY_CONTENT_CAT_TYPE
 
