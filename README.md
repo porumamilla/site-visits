@@ -33,7 +33,7 @@ ContentCategoryOptions options = PipelineOptionsFactory.fromArgs(args).withValid
 						.withFormatFunction(quote -> new TableRow().set("USER_NAME", "porumamilla_raghu")
 								.set("CAT_TYPE", quote.getKey()).set("NUM_MINUTES_SPENT", quote.getValue())
 								.set("DATE", getDate(new Date())).set("UPDATED_TIME_STAMP", getTimestamp()))
-						.withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_TRUNCATE));
+						.withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
 
 		p.run().waitUntilFinish();
 ```
