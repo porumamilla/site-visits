@@ -17,17 +17,18 @@ Pipeline reads the JSON event data and a composite will take the json data and s
 ```
 ## Batch Pipeline implementation
 ```java
-ContentCategoryOptions options = PipelineOptionsFactory.fromArgs(args).withValidation().as(ContentCategoryOptions.class);
+ContentCategoryOptions options = PipelineOptionsFactory.fromArgs(args).withValidation().
+								 as(ContentCategoryOptions.class);
 Pipeline pipeline = Pipeline.create(options);
 
 PCollection<String> jsonLines = pipeline.apply(TextIO.read().from(options.getInputFile()));
 		
 PCollection<KV<Long, Long>> sumByCategoryTypeTuples = jsonLines.apply(new SumByCategoryTypeComposite());
 sumByCategoryTypeTuples.apply(BigQueryIO.<KV<Long, Long>>write()
-					   .to(SchemaUtil.TBL_NAME_SUM_BY_CONTENT_CAT_TYPE)
-					   .withSchema(SchemaUtil.SUM_BY_CONTENT_CAT_TYPE_SCHEMA)
-				       .withFormatFunction(tuple -> TableRowUtil.getTableRowForSumByContentCatType(tuple))
-				       .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
+				.to(SchemaUtil.TBL_NAME_SUM_BY_CONTENT_CAT_TYPE)
+				.withSchema(SchemaUtil.SUM_BY_CONTENT_CAT_TYPE_SCHEMA)
+				.withFormatFunction(tuple -> TableRowUtil.getTableRowForSumByContentCatType(tuple))
+				.withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
 
 pipeline.run().waitUntilFinish();
 ```
