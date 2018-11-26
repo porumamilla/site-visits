@@ -6,12 +6,13 @@ Pipeline reads the JSON event data and a composite will take the json data and s
 ```json
 {
 "site": "Youtube",
-"visits": [
-			{"timeSpent": 7200,"contentType": 1,"contentCategory": 2,"url": "youtube.com/godfather"},
-			{"timeSpent": 1200,"contentType": 2,"contentCategory": 1,"url": "youtube.com/python"},
-			{"timeSpent": 2200,"contentType": 1,"contentCategory": 2,"url": "youtube.com/latenightshow"},
-			{"timeSpent": 3200,"contentType": 2,"contentCategory": 1,"url": "youtube.com/agile-methodology"}
-		  ]
+"visits":
+	[
+	{"timeSpent": 7200,"contentType": 1,"contentCategory": 2,"url": "youtube.com/godfather"},
+	{"timeSpent": 1200,"contentType": 2,"contentCategory": 1,"url": "youtube.com/python"},
+	{"timeSpent": 2200,"contentType": 1,"contentCategory": 2,"url": "youtube.com/latenightshow"},
+	{"timeSpent": 3200,"contentType": 2,"contentCategory": 1,"url": "youtube.com/agile-methodology"}
+	]
 }
 ```
 ## Batch Pipeline implementation
