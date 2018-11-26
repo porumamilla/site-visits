@@ -30,7 +30,7 @@ PCollection<String> jsonLines = pipeline.apply(TextIO.read().from(options.getInp
 //Get the sum aggregations by category type		
 PCollection<KV<Long, Long>> sumByCategoryTypeTuples = jsonLines.apply(new SumByCategoryTypeComposite());
 
-//Write the aggregation tupes to the BigQuery table
+//Write the aggregation tuples to the BigQuery table
 sumByCategoryTypeTuples.apply(BigQueryIO.<KV<Long, Long>>write()
 				.to(SchemaUtil.TBL_NAME_SUM_BY_CONTENT_CAT_TYPE)
 				.withSchema(SchemaUtil.SUM_BY_CONTENT_CAT_TYPE_SCHEMA)
@@ -41,22 +41,30 @@ pipeline.run().waitUntilFinish();
 ```
 ## Streaming Pipeline implementation
 ```java
+//Create a streaming pipe line options object and it contains where to read the file from
 ContentCategoryPubSubOptions options = PipelineOptionsFactory.fromArgs(args).withValidation()
 				.as(ContentCategoryPubSubOptions.class);
 options.as(DataflowPipelineOptions.class).setStreaming(true);
-		
+
+//Create a pipeline with the above options object		
 Pipeline p = Pipeline.create(options);
 	
 FixedWindows window = FixedWindows.of(Duration.standardMinutes(new Integer(2)));
+
+//Read the json lines from pub sub topic
 PCollection<String> jsonLines = p.apply(PubsubIO.readStrings().fromTopic(
 options.getPubsubTopic())).apply(Window.<String> into(window));
-		
+
+//Get the sum aggregations by category type		
 PCollection<KV<Long, Long>> sumByCategoryType = jsonLines.apply(new SumByCategoryTypeComposite());
+
+//Write the aggregation tuples to the BigQuery table
 sumByCategoryType
 	.apply(BigQueryIO.<KV<Long, Long>>write().to(SchemaUtil.TBL_NAME_SUM_BY_CONTENT_CAT_TYPE)
 	.withSchema(SchemaUtil.SUM_BY_CONTENT_CAT_TYPE_SCHEMA)
 	.withFormatFunction(tuple -> TableRowUtil.getTableRowForSumByContentCatType(tuple))
 	.withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
-
-	p.run().waitUntilFinish();
+	
+//Run the pipeline
+p.run().waitUntilFinish();
 ```
