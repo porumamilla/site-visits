@@ -83,8 +83,8 @@
 						<manifest>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>lib/</classpathPrefix>
-							<!--<mainClass>com.site.visits.runner.ContentCategorySumBQ</mainClass>-->
-							<mainClass>com.site.visits.runner.ContentCategorySumBQSubscriber</mainClass>
+							<mainClass>com.site.visits.runner.ContentCategorySumBQ</mainClass>
+							<!-- <mainClass>com.site.visits.runner.ContentCategorySumBQSubscriber</mainClass> -->
 						</manifest>
 					</archive>
 				</configuration>
