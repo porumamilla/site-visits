@@ -1,6 +1,11 @@
 # site-visits
-This is a Google data flow project and is created to implement the pipeline for handling the site visit events coming from different sources whether it's batching or streaming. And the event comes in the form of JSON string. 
-Pipeline reads the JSON event data and a composite will take the json data and sums up the timeSpent value by category type. Then finally saves the aggregated sum in the BigQuery table SUM_BY_CONTENT_CAT_TYPE
+This is a Google data flow project and is created to implement the pipeline for handling the site visit events coming from different sources whether it's batching or streaming. 
+
+Event comes in the form of JSON string. 
+
+Pipeline reads the JSON event data and a composite will take the json data and sums up the timeSpent value by category type. 
+
+Then finally saves the aggregated sum in the BigQuery table SUM_BY_CONTENT_CAT_TYPE
 
 ## Sample JSON Event data
 ```json
